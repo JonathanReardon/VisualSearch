@@ -4,27 +4,24 @@ import os
 import glob
 import csv
 
+''' Visual search task: the user has to find and [mouse] click on a particular part of the image, RTs displayed at the end.
+This was used as a basic demonstration task by Channel 4. Currently refactoring '''
+
 # Set window and mouse
-
 win = visual.Window([1000,800],color=(1,1,1), colorSpace='rgb', allowGUI=True, monitor='testMonitor', units='deg', fullscr=False)
-
 myMouse = event.Mouse(visible=True,win=win)
 
 # Practice Circles
-
-circles_on = 1
-
+circles_on = 1 # display circles for checking locations, turn off for testing 
 practice_circle = visual.Circle(win, units='deg', radius=1, pos=(8.5,-5.1),lineColor="red", opacity=circles_on)
 
 # vis search correct detection areas (to display ticks)
-
 circle1 = visual.Circle(win, units='deg', radius=1, pos=(4.5,-6), lineColor="red")
 circle2 = visual.Circle(win, units='deg', radius=1, pos=(9,-.8), lineColor="red")
 circle3 = visual.Circle(win, units='deg', radius=1, pos=(-11.1,0), lineColor="red")
 circle4 = visual.Circle(win, units='deg', radius=1, pos=(9.2,-8.2), lineColor="red")
 
 # Set clock and other variables
-
 clock = core.Clock()
 rt_clock = core.Clock()
 default_time=.5
@@ -34,14 +31,15 @@ refresh_rate = 60.0
 fix = 3
 blank = 2
 
+# set refresh rate
 fix_time = fix * refresh_rate
 fix_time = int(fix_time)
 
 blank_screen = blank * refresh_rate
 blank_screen = int(blank_screen)
 
-stim_size = (2560/2.7,1556/2.7)
-prac_stim_size = (2560/100,1556/100)
+stim_size = []
+prac_stim_size = []
 
 rt = []
 correct = 0
@@ -54,22 +52,16 @@ gate3 = 0
 gate4 = 0
 gate5 = 0
 
-# -------------------------- Import stim directories ---------------------------- 
+# Import stim directories 
+Practice   = glob.glob(os.path.join('/home/jon/experiments/Visual_Search/practice','*.jpg'))
+vis_search = glob.glob(os.path.join('/home/jon/experiments/Visual_Search/stimuli','*.jpg')) 
 
-Practice                 = glob.glob(os.path.join('/home/jon/matt/practice','*.jpg'))
-
-vis_search               = glob.glob(os.path.join('/home/jon/matt/vis_search','*.jpg')) 
-
-# ------------------------ Make image objects --------------------------------------
-
-visual_search          = [visual.ImageStim(win, img, name='detection_image' + img, units='pix', size=(stim_size)) for img in vis_search[:]]
-
-practice      = [visual.ImageStim(win, img, name='prac_1' + img, units='deg', size=(prac_stim_size))     for img in Practice[:]] 
- 
-prac1         = practice[0]
+# Make image objects
+visual_search = [visual.ImageStim(win, img, name='detection_image' + img, units='pix', size=(stim_size)) for img in vis_search[:]]
+practice = [visual.ImageStim(win, img, name='prac_1' + img, units='deg', size=(prac_stim_size)) for img in Practice[:]] 
+prac1 = practice[0]
 
 # Set stim order (because they were not appearing in the order that they appear in the directory
-
 youtube_one = visual_search[2]
 all_four_one = visual_search[1]
 youtube_two = visual_search[3]
@@ -115,8 +107,7 @@ rt_list4 = []
 
 counter_practice = 0
 
-# -------------------- PRACTICE TRIAL --------------------
-
+# PRACTICE TRIAL
 end_practice = 1
 displaycircle1 = 0
 
@@ -161,11 +152,8 @@ while end_practice==1:
     
 #ready_screen()
         
-#-----------------------------------------------------------#
-#-----------------------------------------------------------#
-# -------------------- BEGIN EXPERIMENT --------------------#
-#_----------------------------------------------------------#
-#-----------------------------------------------------------#
+
+# BEGIN MAIN ROUTINE
 
 counter1 = 0
 counter2 = 0
@@ -218,7 +206,7 @@ while running==0:
         
     visual_search_set.pop(0)
     
-    # ------------------------------------ image 2 ------------------------------------
+    # image 2 
     
     detection = 0
     rt_clock.reset()
@@ -263,7 +251,7 @@ while running==0:
     #inter_trial_interval()
         
     visual_search_set.pop(0)
-    # ------------------------------------ image 3 ------------------------------------
+    # image 3
     
     detection = 0
     rt_clock.reset()
@@ -308,7 +296,7 @@ while running==0:
     #inter_trial_interval()
         
     visual_search_set.pop(0)
-    # ------------------------------------ image 4 ------------------------------------
+    # image 4 
     
     detection = 0
     rt_clock.reset()
@@ -379,8 +367,8 @@ rt_list3 = str(round(rt_list3[0], 2))
 rt_list4 = str(round(rt_list4[0], 2))
 
 Results_title = visual.TextStim(win, text=myText, color="red", pos=(0,6.5),antialias=True,wrapWidth=None)
-rt_list1         = visual.TextStim(win,   text="3:       " + rt_list1, color="black",   pos=(0,.5),    antialias=True)
-rt_list4      = visual.TextStim(win, text="2:       " + rt_list4, color="black", pos=(0,3.5),    antialias=True)
+rt_list1 = visual.TextStim(win,   text="3:       " + rt_list1, color="black",   pos=(0,.5),    antialias=True)
+rt_list4 = visual.TextStim(win, text="2:       " + rt_list4, color="black", pos=(0,3.5),    antialias=True)
 average_youtube = visual.TextStim(win, text="Avg YouTube: " + avg_youtube, color="green", pos=(0,2),antialias=True,wrapWidth=None)
 
 rt_list2 = visual.TextStim(win,   text="4:       " + rt_list2, color="black",   pos=(0,-1),  antialias=True)
